@@ -1,0 +1,102 @@
+from django.db import models
+from django.contrib.auth.models import User
+from django.db.models import Sum
+
+
+class Author(models.Model):
+    authorRate = models.SmallIntegerField(default=0)
+    authorUser = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def update_rating(self):
+        postRat = self.post_set.aaggregate(postRating=Sum('rate'))
+        pRat = 0
+        pRat += postRat.get('postRating')
+
+        commentRat = self.authorUser.comment_set.aaggregate(commentRating=Sum('rateComment'))
+        cRat = 0
+        cRat += commentRat.get('commentRating')
+
+        self.authorRate = pRat * 3 + cRat
+        self.save()
+
+    def __str__(self):
+        return f'{self.authorUser}'
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=64, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'категория'
+        verbose_name_plural = 'категории'
+
+
+class Post(models.Model):
+    ARTICLE = 'AR'
+    NEWS = 'NW'
+    CATEGORIES = [
+        (ARTICLE, 'статья'),
+        (NEWS, 'новость'),
+    ]
+
+    articleType = models.CharField(max_length=2, choices=CATEGORIES, default=NEWS, verbose_name='Тип публикации')
+    dateAdd = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
+    headline = models.CharField(max_length=128, verbose_name='Заголовок')
+    text = models.TextField(null=False, verbose_name='Текст статьи')
+    rate = models.SmallIntegerField(default=0, verbose_name='рейтинг')
+
+    creator = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name='Автор')
+    postCategory = models.ManyToManyField(Category, through='PostCategory')
+
+    def like(self):
+        self.rate += 1
+        self.save()
+        return self.rate
+
+    def dislike(self):
+        self.rate -= 1
+        self.save()
+        return self.rate
+
+    def preview(self):
+        return f'{self.text[:124]} ...'
+
+    def __str__(self):
+        return f'{self.headline}. \n' \
+               f'{self.text}\n'
+
+    class Meta:
+        verbose_name = 'статья'
+        verbose_name_plural = 'статьи'
+
+
+class PostCategory(models.Model):
+    postThrough = models.ForeignKey(Post, on_delete=models.CASCADE)
+    categoryThrough = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+
+class Comment(models.Model):
+    textComment = models.TextField()
+    dateComment = models.DateTimeField(auto_now_add=True)
+    rateComment = models.SmallIntegerField(default=0)
+
+    postRel = models.ForeignKey(Post, on_delete=models.CASCADE)
+    userRel = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def like(self):
+        self.rateComment += 1
+        self.save()
+        return self.rateComment
+
+    def dislike(self):
+        self.rateComment -= 1
+        self.save()
+        return self.rateComment
+
+    def __str__(self):
+        return f'Дата комментария: {self.dateComment}\n' \
+               f'{self.textComment}\n' \
+               f'рейтинг{self.rateComment}'
