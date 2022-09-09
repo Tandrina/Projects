@@ -1,6 +1,7 @@
 <!--Наследование шаблона от default.html -->
 {% extends 'flatpages/default.html' %}
 {% load custom_filters %}
+{% load custom_tags %}
 
 <!-- Название страницы -->
 {% block title %}
@@ -8,6 +9,7 @@
 {% endblock title %}
 
 {% block content %}
+
     <h2 style="text-align: center">Последние новости</h2>
     <h3 style="text-align: center">{{ time_now|date:'M d Y' }}</h3>
     {% if posts %}
@@ -32,4 +34,27 @@
     {% else %}
         <h2>Пока новостей нет</h2>
     {% endif %}
+
+    {# Добавлена пагинация #}
+{# Блок предыдущих страниц #}
+    {% if page_obj.has_previous %}
+        <a href="?page=1">1</a>
+        {% if page_obj.has_previous != 1 %}
+            ...
+            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+            {% endif %}
+    {% endif %}
+
+        {# блок текущей страницы #}
+        {{ page_obj.number }}
+
+        {# блок следующих страниц #}
+        {% if page_obj.has_next %}
+            <a href="?page{{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+            {% if paginator.num_pages != page_obj.next_page_number %}
+                ...
+                <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+    {% endif %}
+    {% endif %}
+
 {% endblock content %}
