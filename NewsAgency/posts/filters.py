@@ -14,7 +14,7 @@ class PostFilter(django_filters.FilterSet):
         label='Название статьи',
     )
 
-    type = django_filters.ModelChoiceFilter(
+    category = django_filters.ModelChoiceFilter(
         field_name='postCategory',
         queryset=Category.objects.all(),
         label='Категория',
