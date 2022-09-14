@@ -3,9 +3,15 @@
 
 <!-- Название страницы -->
 {% block title %}
-    Создание новости
+    Редактирование новости
 {% endblock title %}
 
 {% block content %}
-
+    <h2>Редактирование статьи</h2>
+<hr>
+<form action="" method="post">
+    {% csrf_token%}
+    {{form.as_p}}
+    <input class="mt-3 btn-primary" type="submit" value="Отправить изменения">
+</form>
 {% endblock content %}

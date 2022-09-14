@@ -1,7 +1,10 @@
 from datetime import datetime
 
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
 from .models import Post
+
 from .filters import PostFilter
 from .forms import *
 
@@ -80,9 +83,9 @@ class NewsUpdate(UpdateView):
 
 # Создаем представление для отображения страницы удаления новости
 class NewsDel(DeleteView):
-    form_class = NewsForm
     model = Post
     template_name = 'news_delete.html'
+    success_url = reverse_lazy('post_list')
 
 
 # Создаем представление для отображения страницы создания статьи
@@ -104,6 +107,7 @@ class ArticleUpdate(UpdateView):
 
 
 class ArticleDel(DeleteView):
-    form_class = NewsForm
     model = Post
     template_name = 'art_delete.html'
+    success_url = reverse_lazy('post_list')
+
