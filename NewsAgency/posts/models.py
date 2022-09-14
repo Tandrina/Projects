@@ -81,6 +81,13 @@ class PostCategory(models.Model):
     postThrough = models.ForeignKey(Post, on_delete=models.CASCADE)
     categoryThrough = models.ForeignKey(Category, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.postThrough.headline
+
+    class Meta:
+        verbose_name = 'Выбор категории'
+        verbose_name_plural = 'Выбор категории'
+
 
 class Comment(models.Model):
     textComment = models.TextField()

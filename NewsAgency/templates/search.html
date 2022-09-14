@@ -31,6 +31,7 @@
             <table style="display: inline-block; font-size: 14px;">
                 <tr>
                     <td style="text-align: center;  font-weight: bold;">Заголовок</td>
+                    <td style="text-align: center;  font-weight: bold;">Категория</td>
                     <td style="text-align: center;  font-weight: bold;">Дата публикации</td>
                     <td style="text-align: center;  font-weight: bold;">Текст</td>
 
@@ -38,9 +39,13 @@
                 </tr>
                 {% for post in posts %}
                     <tr>
-                        <td style="text-align: left">{{ post.headline|censor }}</td>
-                        <td style="text-align: center">{{ post.dateAdd|date:'d M Y' }}</td>
-                        <td style="text-align: left">{{ post.text|truncatechars:20|censor }}</td>
+                        <td style="text-align: left;">{{ post.headline|censor }}</td>
+                        <td style="text-align: center;"> {% for cat in post.postCategory.all %}
+                                {{ cat.name }}
+                                {% endfor %}
+                        </td>
+                        <td style="text-align: center;">{{ post.dateAdd|date:'d M Y' }}</td>
+                        <td style="text-align: left;">{{ post.text|truncatechars:20|censor }}</td>
                     </tr>
                 {% endfor %}
             </table>

@@ -39,21 +39,21 @@ class Migration(migrations.Migration):
                 ('headline', models.CharField(max_length=128)),
                 ('text', models.TextField()),
                 ('rate', models.SmallIntegerField(default=0)),
-                ('creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='news.author')),
+                ('creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='posts.author')),
             ],
         ),
         migrations.CreateModel(
             name='PostCategory',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('categoryThrough', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='news.category')),
-                ('postThrough', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='news.post')),
+                ('categoryThrough', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='posts.category')),
+                ('postThrough', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='posts.post')),
             ],
         ),
         migrations.AddField(
             model_name='post',
             name='postCategory',
-            field=models.ManyToManyField(through='news.PostCategory', to='news.category'),
+            field=models.ManyToManyField(through='posts.PostCategory', to='posts.category'),
         ),
         migrations.CreateModel(
             name='Comment',
@@ -62,7 +62,7 @@ class Migration(migrations.Migration):
                 ('textComment', models.TextField()),
                 ('dateComment', models.DateTimeField(auto_now_add=True)),
                 ('rateComment', models.SmallIntegerField(default=0)),
-                ('postRel', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='news.post')),
+                ('postRel', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='posts.post')),
                 (
                     'userRel',
                     models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
