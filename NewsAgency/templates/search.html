@@ -10,8 +10,20 @@
 
 {% block content %}
 
-    <h2 style="text-align: center">Последние новости</h2>
-    <h3 style="text-align: center">{% current_time %}</h3>
+    <h2 style="text-align: center">Поиск материалов</h2>
+    <h5 style="text-align: center">{% current_time %}</h5>
+<br>
+
+<form  action="" method="get">
+<!--    Генерируем форму с полями, указанными в filters.py-->
+{{filterset.form.as_p}}
+<!--    Создаем кнопку для отправки запроса -->
+<input class='mt-3 btn-primary' type="submit" value="Найти"/>
+
+<br>
+<br>
+<h4 style="text-align: center">Статьи</h4>
+
 <br>
 
     {% if posts %}
