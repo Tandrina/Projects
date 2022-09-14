@@ -1,10 +1,9 @@
 from datetime import datetime
 
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
 from .filters import PostFilter
-from django.http import HttpResponse
+from .forms import *
 
 
 class PostsLIst(ListView):
@@ -59,5 +58,52 @@ class PostsDetails(DetailView):
     template_name = 'post.html'
     context_object_name = 'post'
 
-# def search_news(request):
-#     return HttpResponse(render(request, 'search.html'))
+
+# Создаем представление для отображения страницы создания новости
+class NewsCreate(CreateView):
+    form_class = NewsForm
+    model = Post
+    template_name = 'news_create.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.articleType = 'NW'
+        return super().form_valid(form)
+
+
+# Создаем представление для отображения страницы модерации новости
+class NewsUpdate(UpdateView):
+    form_class = NewsForm
+    model = Post
+    template_name = 'news_update.html'
+
+
+# Создаем представление для отображения страницы удаления новости
+class NewsDel(DeleteView):
+    form_class = NewsForm
+    model = Post
+    template_name = 'news_delete.html'
+
+
+# Создаем представление для отображения страницы создания статьи
+class ArticleCreate(CreateView):
+    form_class = ArticleForm
+    model = Post
+    template_name = 'art_create.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.articleType = 'AR'
+        return super().form_valid(form)
+
+
+class ArticleUpdate(UpdateView):
+    form_class = ArticleForm
+    model = Post
+    template_name = 'art_update.html'
+
+
+class ArticleDel(DeleteView):
+    form_class = NewsForm
+    model = Post
+    template_name = 'art_delete.html'
